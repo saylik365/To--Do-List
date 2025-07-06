@@ -47,69 +47,90 @@
 // }
 // export default App;
 
+
 // import "./App.css";
 // import Header from "./Components/Header";
 // import Todos from "./Components/Todos";
 // import AddTodo from "./Components/AddTodo";
+// import About from "./Components/About";
 // import { Footer } from "./Components/Footer";
 // import React, { useEffect, useState } from "react";
+// import {
+//   BrowserRouter as Router,
+//   // Switch,
+//   Routes, //new V6+ uses Routes instead of Switch
+//   Route
+// } from "react-router-dom";
 
 // function App() {
-//   let initTodo; 
-//   if(localStorage.getItem("todos")===null){
-//     initTodo=[];
+//   let initTodo;
+
+//   if (localStorage.getItem("todos") === null) {
+//     initTodo = [];
+//   } else {
+//     initTodo = JSON.parse(localStorage.getItem("todos"));
 //   }
-//   else{
-//     initTodo= JSON.parse(localStorage.getItem("todos"));
-//   }
+
+//   const [todos, setTodos] = useState(initTodo);
 
 //   const onDelete = (todo) => {
 //     console.log("onDelete", todo);
 //     setTodos(todos.filter((e) => e !== todo));
-//     localStorage.setItem("todos", JSON.stringify(todos));
+//     // ❌ Don't manually set localStorage here; useEffect will handle it
 //   };
 
 //   const addTodo = (title, desc) => {
 //     console.log("I am adding this Todo", title, desc);
 //     const sno = todos.length > 0 ? todos[todos.length - 1].sno + 1 : 1;
-//     // let sno = todos[todos.length-1].sno+1;
 //     const myTodo = {
 //       sno: sno,
 //       title: title,
 //       desc: desc,
 //     };
 //     setTodos([...todos, myTodo]);
-//     console.log(myTodo);
-
-//     // if(localStorage.getItem("todos")){
-//     //   localStorage.setItem("todos", JSON.stringify(todos));
-//     // }
 //   };
 
-//   const [todos, setTodos] = useState([initTodo]);
 //   useEffect(() => {
-//       localStorage.setItem("todos", JSON.stringify(todos));
-//       }, [todos])
+//     localStorage.setItem("todos", JSON.stringify(todos));
+//   }, [todos]);
 
 //   return (
 //     <>
+//     <Router>
 //       <Header title="My Todos list" searchBar={true} />
-//       <AddTodo addTodo={addTodo} />
-//       <Todos todos={todos} onDelete={onDelete} />
+//       <Routes>
+//         <Route exact path="/" render={()=>{
+//             return(
+//             <> 
+//               <AddTodo addTodo={addTodo} />
+//               <Todos todos={todos} onDelete={onDelete} />
+//             </>)
+//           }}>
+//         </Route>
+//         <Route exact path="/about">
+//             <About />
+//         </Route>
+//       </Routes>
 //       <Footer />
+//     </Router>
 //     </>
 //   );
 // }
 
 // export default App;
 
-
 import "./App.css";
 import Header from "./Components/Header";
 import Todos from "./Components/Todos";
 import AddTodo from "./Components/AddTodo";
+import About from "./Components/About";
 import { Footer } from "./Components/Footer";
 import React, { useEffect, useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
 
 function App() {
   let initTodo;
@@ -125,7 +146,6 @@ function App() {
   const onDelete = (todo) => {
     console.log("onDelete", todo);
     setTodos(todos.filter((e) => e !== todo));
-    // ❌ Don't manually set localStorage here; useEffect will handle it
   };
 
   const addTodo = (title, desc) => {
@@ -144,13 +164,22 @@ function App() {
   }, [todos]);
 
   return (
-    <>
+    <Router>
       <Header title="My Todos list" searchBar={true} />
-      <AddTodo addTodo={addTodo} />
-      <Todos todos={todos} onDelete={onDelete} />
+      <Routes>
+        <Route path="/" element={ //use element instead of render
+            <>
+              <AddTodo addTodo={addTodo} />
+              <Todos todos={todos} onDelete={onDelete} />
+            </>
+          }
+        />
+        <Route path="/about" element={<About />} />
+      </Routes>
       <Footer />
-    </>
+    </Router>
   );
 }
 
 export default App;
+
